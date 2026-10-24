@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Teclado dinâmico de senhas",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/TecladoDinamicoSenhas/bin/Debug/net10.0/TecladoDinamicoSenhas.dll",
+      "cwd": "${workspaceFolder}/src/TecladoDinamicoSenhas",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ]
+}
