@@ -4,6 +4,8 @@ Console app em C# que demonstra como funciona o teclado dinâmico de senhas usad
 
 Criado para uma live da comunidade [Aguiar Dev](https://tiagoaguiardev.com.br/comunidade). Baseado no artigo [How bank passwords work](https://felipperegazio.com/posts/how-bank-passwords-works/).
 
+Assista à live: [Como funciona o teclado dinâmico de senhas do banco](https://youtube.com/live/5V4e7X8-8B4)
+
 ## Como funciona
 
 1. **Cadastro (servidor):** a senha é guardada só como hash PBKDF2 com salt.
@@ -11,6 +13,10 @@ Criado para uma live da comunidade [Aguiar Dev](https://tiagoaguiardev.com.br/co
 3. **Digitação (cliente):** o usuário escolhe grupos. O que vai para o servidor são apenas os tokens, nunca os dígitos.
 4. **Validação (servidor):** os tokens são revertidos pelo mapa da sessão, o servidor gera todas as combinações possíveis e compara o hash de cada uma com o hash cadastrado.
 5. **Replay:** a sessão é descartada, e os mesmos tokens enviados de novo são rejeitados.
+
+## Diagrama
+
+![Diagrama do funcionamento do teclado dinâmico de senhas, em cinco cenas: salt e hash, embaralhamento dos grupos, chave da sessão e tokens, mapa da sessão e validação](Excalidraw.png)
 
 ## Como executar
 
