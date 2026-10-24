@@ -8,7 +8,15 @@ partial class Program
     const int TamanhoSenha = 4;
     const int IteracoesPbkdf2 = 100_000;
 
-    // Embaralha os dígitos de 0 a 9 (Fisher-Yates) e divide em 5 grupos de 2.
+    /* Embaralha os dígitos de 0 a 9 (Fisher-Yates) e divide em 5 grupos de 2.
+
+    1. Percorra o array do fim para o começo.
+    2. Em cada posição i, sorteie um índice j entre 0 e i e troque os dois elementos.
+    3. A posição i fica definitiva e o sorteio continua só no que sobrou.
+
+    Este algoritmo garante que o teclado de cada sessão seja uma permutação aleatória sem favorecer nenhuma ordem.
+
+    */
     static int[][] GerarGrupos()
     {
         var digitos = Enumerable.Range(0, 10).ToArray();
@@ -18,6 +26,12 @@ partial class Program
             var j = RandomNumberGenerator.GetInt32(i + 1);
             (digitos[i], digitos[j]) = (digitos[j], digitos[i]);
         }
+        
+        /* Transforma lista numérica em lista de pares e ordena cada par. Ex:
+
+        - [9, 4, 2, 7, 0, 5, 1, 8, 6, 3] <- lista original
+        - [9,4], [2,7], [0,5], [1,8], [6,3] <- lista de listas com dois números
+        - [4,9], [2,7], [0,5], [1,8], [3,6] <- ordena os números de cada lista */
 
         return digitos.Chunk(2).Select(grupo => grupo.Order().ToArray()).ToArray();
     }
@@ -36,7 +50,15 @@ partial class Program
     static string[] GerarTokens(byte[] chaveSessao, int[][] grupos) =>
         grupos.Select(grupo => GerarToken(chaveSessao, grupo)).ToArray();
 
-    // O mapa fica guardado no servidor, associado à sessão: token -> grupo.
+    /* O mapa fica guardado no servidor, associado à sessão: token -> grupo. Detalhes do Zip:
+    
+        - Chaves precisam ser únicas. Se dois tokens fossem iguais, o ToDictionary 
+        lançaria exceção. Na prática isso não acontece, porque cada token é um HMAC 
+        de um grupo diferente (e no teste que rodei os 5 tokens saíram distintos).
+
+        - O Zip para no array mais curto. Se tokens e grupos tivessem tamanhos diferentes, 
+        os elementos sobrando seriam ignorados sem erro. Aqui os dois têm sempre 5 itens.
+    */
     static Dictionary<string, int[]> CriarMapaSessao(string[] tokens, int[][] grupos) =>
         tokens.Zip(grupos).ToDictionary(par => par.First, par => par.Second);
 

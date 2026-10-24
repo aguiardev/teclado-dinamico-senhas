@@ -8,10 +8,12 @@ const string senhaCadastrada = "1234";
 
 // Servidor: a senha cadastrada fica guardada só como hash + salt.
 var salt = RandomNumberGenerator.GetBytes(16);
+
+// Sem o salt, a mesma senha sempre geraria o mesmo hash.
 var hashCadastrado = HashSenha(senhaCadastrada, salt);
 
 // Servidor: abre a sessão, embaralha os dígitos e guarda o mapa token -> grupo.
-var grupos = GerarGrupos();
+var grupos = GerarGrupos(); // <- dígitos divididos em pares, já embaralhados
 var chaveSessao = GerarChaveSessao();
 var tokens = GerarTokens(chaveSessao, grupos);
 var mapaSessao = CriarMapaSessao(tokens, grupos);
